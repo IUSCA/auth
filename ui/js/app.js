@@ -6,7 +6,7 @@ var app = angular.module('app', [
     'ngAnimate',
     'ngCookies',
     'toaster',
-    'angular-loading-bar',
+    //'angular-loading-bar',
     'angular-jwt',
     'ui.bootstrap',
     'sca-shared',
@@ -59,9 +59,9 @@ app.factory('profiles', function(appconf, $http, jwtHelper, toaster) {
 });
 
 //show loading bar at the top
-app.config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
-    cfpLoadingBarProvider.includeSpinner = false;
-}]);
+// app.config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
+//     cfpLoadingBarProvider.includeSpinner = false;
+// }]);
 
 //set allowed jwt provider
 app.config(function(appconf, $httpProvider, jwtOptionsProvider) {
@@ -131,8 +131,11 @@ app.config(['$routeProvider', 'appconf', function($routeProvider, appconf) {
 }]).run(['$rootScope', '$location', 'toaster', 'jwtHelper', 'appconf', function($rootScope, $location, toaster, jwtHelper, appconf) {
     $rootScope.$on("$routeChangeStart", function(event, next, current) {
         //redirect to /login if user hasn't authenticated yet
+        console.log("I am here");
+        console.log(next.templateUrl);
         if(next.requiresLogin) {
             var jwt = localStorage.getItem(appconf.jwt_id);
+            console.log(jwt);
             if(jwt == null || jwtHelper.isTokenExpired(jwt)) {
                 toaster.warning("Please sign in first");
                 sessionStorage.setItem('auth_redirect', '#!'+next.originalPath);

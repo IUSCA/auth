@@ -53,6 +53,7 @@
                 return;
             }
             localStorage.setItem(appconf.jwt_id, res.data.jwt);
+            localStorage.setItem('caslogin', true);
             var redirect = sessionStorage.getItem('auth_redirect');
             sessionStorage.removeItem('auth_redirect');
             scaMessage.success("Successfully logged in");

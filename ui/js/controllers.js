@@ -109,9 +109,14 @@ function($scope, $route, $http, $routeParams, $location, scaMessage, $sce, $root
 app.controller('SignoutController', 
 function($scope, $route, $http, $routeParams, menu, $location, scaMessage) {
     scaMessage.success("Good Bye!");
+    var caslogin = localStorage.getItem('caslogin');
     localStorage.removeItem($scope.appconf.jwt_id);
     menu.user = null; //scaMenubar watches for this and re-init
-    $location.path("/signin");
+    if(caslogin){
+        window.location = $scope.appconf.iucas_logout;
+    } else {
+        $location.path("/signin");
+    }
 });
 
 app.controller('SignupController', 
@@ -340,8 +345,9 @@ app.controller('AdminUsersController', function($scope, $route, toaster, $http, 
     scaMessage.show(toaster);
     $scope.$parent.active_menu = 'admin';
     $scope.admin_menu = scaAdminMenu;
+    console.log($scope.user);
 
-    $http.get($scope.appconf.api+'/users')
+    $http.get($scope.appconf.api+'/users', $scope.user)
     .then(function(res) { 
         $scope.users = res.data; 
     }, function(res) {

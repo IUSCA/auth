@@ -14,10 +14,12 @@ const common = require('../common');
 const db = require('../models');
 
 function has_scope(req, role) {
+    console.log(req.headers.authorization);
+    console.log(req.user);
     if(!req.user) return false;
     if(!req.user.scopes) return false;
-    if(!req.user.scopes.auth) return false;
-    if(!~req.user.scopes.auth.indexOf(role)) return false;
+    if(!req.user.scopes.sca) return false;
+    if(!~req.user.scopes.sca.indexOf(role)) return false;
     return true;
 }
 
@@ -46,10 +48,11 @@ function scope(role) {
  * @apiSuccess {Object} jwt New JWT token
  */
 router.post('/refresh', jwt({secret: config.auth.public_key}), function(req, res, next) {
+    console.log("Made it in here at least");
     db.User.findOne({where: {id: req.user.sub}}).then(function(user) {
         if(!user) return next("Couldn't find any user with sub:"+req.user.sub);
         //intersect requested scopes
-        if(req.body.scopes) user.scopes = common.intersect_scopes(user.scoppes, req.body.scopes);
+        if(req.body.scopes) user.scopes = common.intersect_scopes(user.scopes, req.body.scopes);
         common.createClaim(user, function(err, claim) {
             if(err) return next(err);
             var jwt = common.signJwt(claim);

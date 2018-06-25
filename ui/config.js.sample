@@ -33,6 +33,7 @@ angular.module('app.config', [])
 
     jwt_id: 'jwt',
     iucas_url: 'https://cas.iu.edu/cas/login',
+    iucas_logout: 'https://cas.iu.edu/cas/logout',
 
     jwt_whitelist: ['dev1.soichi.us'], //list of domains to allow jwtInterceptor to send jwt to
 
